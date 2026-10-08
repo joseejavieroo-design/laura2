@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Laura - Te Amo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@600;800&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: radial-gradient(circle at center, #1a0010 0%, #0d0008 50%, #000000 100%);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .font-romantic {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Estilos del corazón y sus mitades */
+        .heart-container {
+            position: relative;
+            width: 280px;
+            height: 260px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 640px) {
+            .heart-container {
+                width: 360px;
+                height: 330px;
+            }
+        }
+
+        .heart-half {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            transition: transform 2.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease;
+            filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.6));
+        }
+
+        .heart-left {
+            left: 0;
+            transform: translateX(-180vw) rotate(-20deg);
+        }
+
+        .heart-right {
+            right: 0;
+            transform: translateX(180vw) rotate(20deg);
+        }
+
+        /* Clase activada para unir el corazón */
+        .heart-container.joined .heart-left {
+            transform: translateX(0) rotate(0deg);
+        }
+
+        .heart-container.joined .heart-right {
+            transform: translateX(0) rotate(0deg);
+        }
+
+        /* SVG Heart Shapes */
+        .heart-svg {
+            width: 200%;
+            height: 100%;
+        }
+
+        .heart-left .heart-svg {
+            position: absolute;
+            left: 0;
+        }
+
+        .heart-right .heart-svg {
+            position: absolute;
+            right: 0;
+        }
+
+        /* Texto dentro del corazón */
+        .heart-text {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            width: 90%;
+            text-align: center;
+            z-index: 20;
+            pointer-events: none;
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition-delay: 2.8s;
+        }
+
+        .heart-container.joined .heart-text {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Texto con efecto brillante dorado */
+        .gold-text {
+            background: linear-gradient(135deg, #FFF6BD 0%, #FFD700 35%, #FFA500 70%, #FFF8DC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+        }
+
+        /* Destello al unirse */
+        .flash-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,215,0,0.8) 40%, rgba(236,72,153,0) 70%);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .flash-effect.active {
+            animation: flashAnim 1.2s ease-out 2.7s forwards;
+        }
+
+        @keyframes flashAnim {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(25);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(40);
+                opacity: 0;
+            }
+        }
+
+        /* Animación de latido después de unirse */
+        .heart-container.joined {
+            animation: pulse 2s infinite ease-in-out 4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.7));
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 35px rgba(244, 63, 94, 0.9));
+            }
+        }
+
+        /* Mensaje con aparición suave */
+        .message-card {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.5s ease-out 3.5s;
+        }
+
+        .message-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Partículas flotantes */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.3) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.1) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Botón romántico */
+        .btn-replay {
+            background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-replay:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 20px rgba(225, 29, 72, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-replay:active {
+            transform: translateY(1px) scale(0.98);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen text-white relative px-4 py-8 select-none">
+
+    <div id="stars-container" class="fixed inset-0 pointer-events-none z-0"></div>
+    <div id="particles-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- Encabezado / Título principal -->
+    <header class="z-10 text-center mt-2 mb-4">
+        <p class="text-rose-300 text-sm md:text-base tracking-widest uppercase font-light mb-1">Para el amor de mi vida</p>
+        <h1 class="font-romantic text-4xl md:text-6xl text-pink-200 drop-shadow-[0_2px_10px_rgba(244,63,94,0.5)]">Laurita</h1>
+    </header>
+
+    <main class="z-10 flex-1 flex flex-col items-center justify-center w-full max-w-4xl my-auto">
+        
+        <!-- Contenedor del Corazón Dividido -->
+        <div id="heartContainer" class="heart-container my-6">
+            
+            <!-- Mitad Izquierda -->
+            <div class="heart-half heart-left">
+                <svg class="heart-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff2a6d" />
+                            <stop offset="70%" stop-color="#910038" />
+                            <stop offset="100%" stop-color="#4a001a" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M 50 90 C 20 70, 0 50, 0 28 A 25 25 0 0 1 50 15 Z" fill="url(#gradLeft)" />
+                </svg>
+            </div>
+
+            <!-- Mitad Derecha -->
+            <div class="heart-half heart-right">
+                <svg class="heart-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradRight" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff4b82" />
+                            <stop offset="70%" stop-color="#be004a" />
+                            <stop offset="100%" stop-color="#4a001a" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Alineado para encajar exactamente con el lado izquierdo -->
+                    <path d="M 50 90 C 80 70, 100 50, 100 28 A 25 25 0 0 0 50 15 Z" fill="url(#gradRight)" />
+                </svg>
+            </div>
+
+            <!-- Destello resplandeciente -->
+            <div id="flashEffect" class="flash-effect"></div>
+
+            <!-- Texto interior en letras doradas deslumbrantes -->
+            <div class="heart-text">
+                <h2 class="font-cinzel text-xl sm:text-3xl md:text-4xl font-extrabold gold-text tracking-wider leading-tight">
+                    LAURA<br>TE AMO
+                </h2>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Mensaje Romántico -->
+        <div id="messageCard" class="message-card w-full max-w-xl mx-auto mt-4 px-6 py-6 rounded-2xl bg-gradient-to-b from-rose-950/40 to-black/60 backdrop-blur-md border border-rose-500/20 shadow-[0_10px_30px_rgba(0,0,0,0.8)] text-center">
+            <p class="font-romantic text-2xl sm:text-3xl md:text-4xl text-rose-200 mb-3 leading-relaxed">
+                "Eres la mujer de mi vida, la mujer más importante de mi vida."
+            </p>
+            <p class="font-cinzel text-amber-200 text-sm sm:text-base font-semibold tracking-widest uppercase mb-4 drop-shadow">
+                ✨ Juntos hasta el infinito y más allá ✨
+            </p>
+            <div class="w-16 h-0.5 bg-gradient-to-r from-transparent via-rose-400 to-transparent mx-auto mb-3"></div>
+            <p class="text-xs sm:text-sm text-pink-300/90 italic">
+                Hecho con mucho amor por <span class="font-semibold text-rose-200 uppercase not-italic">Javier</span> para ti <span class="font-semibold text-rose-200 uppercase not-italic">Laurita</span> ❤️
+            </p>
+        </div>
+
+    </main>
+
+    <!-- Controles de la animación -->
+    <footer class="z-10 mt-6 mb-2 text-center">
+        <button id="replayBtn" onclick="startAnimation()" class="btn-replay px-7 py-3 rounded-full text-white font-medium text-sm tracking-wider flex items-center gap-2 mx-auto cursor-pointer border border-pink-400/30">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            REPETIR MOMENTO
+        </button>
+    </footer>
+
+    <script>
+        // Crear estrellas en el fondo
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const count = 70;
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                const size = Math.random() * 2 + 1;
+                star.style.position = 'absolute';
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.backgroundColor = '#ffffff';
+                star.style.borderRadius = '50%';
+                star.style.opacity = Math.random() * 0.7 + 0.3;
+                star.style.boxShadow = `0 0 ${size * 2}px #ffffff`;
+                container.appendChild(star);
+            }
+        }
+
+        // Crear corazones y partículas flotantes
+        function createFloatingParticles() {
+            const container = document.getElementById('particles-container');
+            const particleTypes = ['❤️', '✨', '💖', '🌸', '💕'];
+            
+            setInterval(() => {
+                if (document.hidden) return;
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const isHeart = Math.random() > 0.3;
+                if (isHeart) {
+                    particle.textContent = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+                    particle.style.fontSize = `${Math.random() * 16 + 12}px`;
+                } else {
+                    particle.style.width = `${Math.random() * 4 + 2}px`;
+                    particle.style.height = particle.style.width;
+                    particle.style.backgroundColor = '#ffd700';
+                    particle.style.borderRadius = '50%';
+                    particle.style.boxShadow = '0 0 8px #ffd700';
+                }
+
+                particle.style.left = `${Math.random() * 100}%`;
+                const duration = Math.random() * 6 + 6;
+                particle.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(particle);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, duration * 1000);
+            }, 400);
+        }
+
+        // Efecto de destellos pequeños suplementarios al unirse
+        function createSparklesBurst() {
+            const container = document.getElementById('heartContainer');
+            const sparkCount = 20;
+
+            for (let i = 0; i < sparkCount; i++) {
+                const spark = document.createElement('div');
+                spark.style.position = 'absolute';
+                spark.style.top = '50%';
+                spark.style.left = '50%';
+                spark.style.width = '6px';
+                spark.style.height = '6px';
+                spark.style.backgroundColor = i % 2 === 0 ? '#ffd700' : '#ffffff';
+                spark.style.borderRadius = '50%';
+                spark.style.pointerEvents = 'none';
+                spark.style.zIndex = '30';
+                
+                const angle = (i / sparkCount) * Math.PI * 2;
+                const velocity = Math.random() * 80 + 40;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity;
+
+                spark.style.transition = 'all 1s cubic-bezier(0.1, 0.8, 0.3, 1)';
+                container.appendChild(spark);
+
+                setTimeout(() => {
+                    spark.style.transform = `translate(${tx}px, ${ty}px) scale(0)`;
+                    spark.style.opacity = '0';
+                }, 50);
+
+                setTimeout(() => {
+                    spark.remove();
+                }, 1100);
+            }
+        }
+
+        // Iniciar / Reiniciar la animación
+        function startAnimation() {
+            const heartContainer = document.getElementById('heartContainer');
+            const flashEffect = document.getElementById('flashEffect');
+            const messageCard = document.getElementById('messageCard');
+
+            // Resetear estados
+            heartContainer.classList.remove('joined');
+            flashEffect.classList.remove('active');
+            messageCard.classList.remove('show');
+
+            // Forzar reflow para reiniciar la animación CSS
+            void heartContainer.offsetWidth;
+
+            // Iniciar movimiento de unión
+            setTimeout(() => {
+                heartContainer.classList.add('joined');
+                flashEffect.classList.add('active');
+            }, 100);
+
+            // Ráfaga de destellos cuando el corazón se une
+            setTimeout(() => {
+                createSparklesBurst();
+            }, 2800);
+
+            // Mostrar el mensaje romántico
+            setTimeout(() => {
+                messageCard.classList.add('show');
+            }, 3200);
+        }
+
+        // Inicialización al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            createFloatingParticles();
+            // Iniciar animación automáticamente tras un breve instante
+            setTimeout(startAnimation, 300);
+        });
+    </script>
+</body>
+</html>
